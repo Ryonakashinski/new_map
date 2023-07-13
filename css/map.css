@@ -1,0 +1,38 @@
+#map {
+  position: relative;
+  height: 1000px;
+  width: 1000px;
+}
+
+#chatBoxContainer {
+  position: absolute;
+  height: 1000px; /* Match the height of the map container */
+  width: 1000px;
+  z-index: 1000; /* Set a higher z-index value to ensure the chat box appears above the map */
+}
+
+#chatBox {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+#chatBox div {
+  margin-bottom: 10px; /* Add spacing between input elements */
+}
+
+#chatBox input[type="text"] {
+  width: 100%; /* Expand the input boxes to fill the container */
+  padding: 8px; /* Adjust the padding as needed */
+  border: 1px solid #cccccc; /* Adjust the border style and color as needed */
+  border-radius: 4px; /* Add rounded corners to the input boxes */
+  transition: border-color 0.3s ease;
+}
+
+#chatBox input[type="text"]:focus {
+  outline: none;
+  border-color: #8e44ad;
+  box-shadow: 0 0 5px #8e44ad;
+}

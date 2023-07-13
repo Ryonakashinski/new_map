@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HiHiRi PiPiPi</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <!-- leaflet js -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""></script>
+
+    <!-- Leaflet Control Geocoder -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <!-- <link rel="stylesheet" href="../css/map.css" /> -->
+    <!-- tailwind -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <link rel="stylesheet" href="output.css" />
+    <style>
+      #map {
+        height: 1000px;
+      }
+      #output li {
+        background: rgb(240, 235, 233);
+      }
+    </style>
+  </head>
+
+  <!-- the interactive web map -->
+  <body>
+    <div class="bg-green-700" id="map"></div>
+
+    <div id="map"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // map initialization. L is for leaflip
+        var map = L.map("map").setView([33.58986, 130.40177], 2);
+
+        L.marker([33.58986, 130.40177], {
+          title: "fukuoka",
+        }).addTo(map);
+        //
+        // declare and initialize the 'zoomed' variable.
+        var zoomed = false;
+
+        // Create a marker
+        var marker = L.marker([51.505, -0.09]).addTo(map);
+
+        // the radius of the circle which is denoting the accuracy of my current position.
+        var circle = L.circle([51.505, -0.09], {
+          radius: 1000,
+        }).addTo(map);
+
+        // Create a popup and associate it with the marker
+        var popup = L.popup()
+          .setLatLng(marker.getLatLng())
+          .setContent("This is a popup!")
+          .openOn(map);
+
+        // Asian countries layer
+        fetch("../geojson.file/custom.geo.json") //the data is fetched
+          .then((response) => response.json()) // it is parsed as JSON
+          .then((data) => {
+            //passed to the L.geoJson method, which creates a GeoJSON layer and adds it to the map
+            L.geoJson(data).addTo(map);
+          });
+        //
+        fetch("../geojson.file/north_america.geojson") //the data is fetched
+          .then((response) => response.json()) // it is parsed as JSON
+          .then((data) => {
+            //passed to the L.geoJson method , which creates a GeoJSON layer and adds it to the map
+            L.geoJson(data).addTo(map);
+          });
+        //
+        //
+        //
+        // 1. make an icon that users can put their icons.
+        // step.1 Define the icon options
+        var dataFriends = {
+          cdf: {
+            coords: [31.1766, 121.4372],
+            titile: "Friends",
+            address: `
+            <b>China</b><br>
+            Shanghai<br>
+            Millie chan,`,
+
+            // I am trying to put php file from <a href= ></a> it does not work.
+          },
+        };
+        var customFriends = L.icon({
+          iconUrl: "../images/friend.png",
+          iconSize: [30, 30], // The size of the icon
+          iconAnchor: [15, 15], // The anchor point of the icon, relative to its size
+        });
+
+        for (let key in dataFriends) {
+          var friends = dataFriends[key];
+          L.marker(friends.coords, {
+            titile: friends.title,
+            icon: customFriends,
+          })
+            .bindPopup(
+              `
+            <span class = 'popup'>
+              ${friends.address}
+              <a href = '${friends.website}' target = '_blank'> Message </a><br>
+              </span>
+              `
+            )
+            .addTo(map);
+        }
+
+        // customize individual icons for different markers
+        var anotherIcon = L.icon({
+          iconUrl: "../images/hostel.png",
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+        });
+
+        // step.2 display the icon on the map.
+        var anotherMarker = L.marker([-6.1754, 106.8098], {
+          //jakarta
+          icon: anotherIcon,
+        }).addTo(map);
+
+        //step.2 chat interface
+
+        // step.3 Implement a real-time communication
+
+        // step.4 user profiles
+
+        //step.5 notification system
+
+        //step.6 moderation and privacy
+
+        // a blank map
+        map.createPane("labels");
+        map.getPane("labels").style.zIndex = 650;
+        // disable pointer events for it
+        map.getPane("labels").style.pointerEvents = "none";
+        // CartoDB's Positron map tiles for the map background
+        var positron = L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+          {
+            attribution: "©OpenStreetMap, ©CartoDB",
+          }
+        ).addTo(map);
+        // CartoDB's Positron map tiles for the labels
+        var positronLabels = L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+          {
+            attribution: "©OpenStreetMap, ©CartoDB",
+            pane: "labels",
+          }
+        ).addTo(map);
+
+        //
+        //
+        //
+        //
+        //
+
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 5,
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(map);
+
+        // request the current position of a user
+        navigator.geolocation.watchPosition(success, error);
+
+        // success function is going to fire!
+        function success(pos) {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const accuracy = pos.coords.accuracy;
+
+          // zoom the map to the extent of the circle.
+
+          if (marker) {
+            map.removeLayer(marker);
+            map.removeLayer(circle);
+          }
+
+          if (!zoomed) {
+            zoomed = true;
+            zoomed = map.fitBounds(circle.getBounds());
+          }
+        }
+
+        function error(err) {
+          if (err.code === 1) {
+            alert("Please allow geolocation access");
+          } else {
+            alert("Cannot get current location");
+          }
+        }
+
+        function highlightFeature(e) {
+          var layer = e.target;
+
+          layer.setStyle({
+            weight: 5,
+            color: "#666",
+            dashArray: "",
+            fillOpacity: 0.7,
+          });
+
+          layer.bringToFront();
+        }
+      });
+    </script>
+  </body>
+</html>
